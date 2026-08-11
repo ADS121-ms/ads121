@@ -551,7 +551,7 @@ body::before{
 .save-dot.hide{opacity:0;}
 
 /* Theme toggle */
-.theme-tgl{width:42px;height:42px;border-radius:50%;border:1.5px solid var(--border);cursor:pointer;background:var(--card);font-size:18px;transition:all var(--transition);display:flex;align-items:center;justify-content:center;margin:var(--space) auto 0;}
+.theme-tgl{position:fixed;top:16px;right:60px;width:42px;height:42px;border-radius:50%;border:1.5px solid var(--border);cursor:pointer;background:var(--card);font-size:18px;z-index:30;transition:all var(--transition);display:flex;align-items:center;justify-content:center;}
 .theme-tgl:hover{transform:scale(1.1);border-color:var(--accent);box-shadow:0 4px 14px rgba(0,0,0,.08);}
 
 /* Tab panels */
@@ -776,8 +776,6 @@ body::before{
     <button class="pomo-btn-sm" id="pomoMiniBtn" onclick="toggleMiniPomo()">▶ 开始专注</button>
   </div>
 
-  <div class="theme-tgl" onclick="toggleTheme()" title="切换主题">🌙</div>
-
   <div class="toolbar">
     <button class="tbtn active" onclick="setQuickFilter('all',this)">全部</button>
     <button class="tbtn" onclick="setQuickFilter('high',this)">🔥 高优先</button>
@@ -943,6 +941,7 @@ body::before{
 </div>
 
 <!-- Focus mode toggle -->
+<div class="theme-tgl" onclick="toggleTheme()" title="切换主题">🌙</div>
 <button class="focus-toggle" id="focusToggle" onclick="toggleFocusMode()" title="专注模式">🧘</button>
 
 <!-- Achievement toast -->
