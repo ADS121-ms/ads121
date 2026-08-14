@@ -551,8 +551,9 @@ body::before{
 .save-dot.hide{opacity:0;}
 
 /* Theme toggle */
-.theme-tgl{position:fixed;top:16px;right:60px;width:42px;height:42px;border-radius:50%;border:1.5px solid var(--border);cursor:pointer;background:var(--card);font-size:18px;z-index:30;transition:all var(--transition);display:flex;align-items:center;justify-content:center;}
+.theme-tgl{position:fixed;bottom:28px;right:28px;width:42px;height:42px;border-radius:50%;border:1.5px solid var(--border);cursor:pointer;background:var(--card);font-size:18px;z-index:30;transition:all var(--transition);display:flex;align-items:center;justify-content:center;}
 .theme-tgl:hover{transform:scale(1.1);border-color:var(--accent);box-shadow:0 4px 14px rgba(0,0,0,.08);}
+@media(max-width:768px){.theme-tgl{bottom:auto;top:12px;right:12px;left:auto;}}
 
 /* Tab panels */
 .tab-panel{display:none;animation:fadeIn .35s ease;}
@@ -683,6 +684,7 @@ body::before{
   .focus-row{flex-direction:column;}
   .welcome{padding:var(--space);}.welcome-clock{display:none;}
   .welcome-text .hi{font-size:20px;}
+  .theme-tgl{bottom:auto;top:12px;right:12px;left:auto;}
   .cal-day{font-size:13px;}
   .mob-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);z-index:40;padding-bottom:env(safe-area-inset-bottom);}
   .mob-nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:6px 0;font-size:10px;color:var(--ink-m);border:none;background:none;cursor:pointer;font-family:var(--font-body);gap:2px;}
@@ -941,13 +943,13 @@ body::before{
 </div>
 
 <!-- Focus mode toggle -->
-<div class="theme-tgl" onclick="toggleTheme()" title="切换主题">🌙</div>
 <button class="focus-toggle" id="focusToggle" onclick="toggleFocusMode()" title="专注模式">🧘</button>
 
 <!-- Achievement toast -->
 <div class="achieve-toast" id="achieveToast"><span class="at-icon"></span><div class="at-title"></div><div class="at-desc"></div></div>
 
 <div class="save-dot" id="saveDot">✓ 已自动保存</div>
+<div class="theme-tgl" onclick="toggleTheme()" title="切换主题">🌙</div>
 
 <script>
 // ═══════════════ STATE ═══════════════
@@ -1027,7 +1029,7 @@ function addTask(){
   const inp=document.querySelector('.tab-panel.active .add-input')||document.getElementById('taskInput');
   const dateEl=document.querySelector('.tab-panel.active input[type="date"]')||document.getElementById('taskDate');
   const text=inp.value.trim();if(!text){inp.focus();return;}
-  const t=mkTask(text);if(!dateFilter&&dateEl&&dateEl.value)t.date=dateEl.value;
+  const t=mkTask(text);if(dateEl&&dateEl.value)t.date=dateEl.value;
   tasks.unshift(t);lastAddedId=t.id;save();inp.value='';if(dateEl)dateEl.value='';renderAll();toast('✅ 已添加');inp.focus();
 }
 function toggleDone(id){const t=tasks.find(x=>x.id===id);if(!t)return;t.done=!t.done;if(t.done)t.focus=false;save();renderAll();if(t.done)checkAchievements();if(!t.done)toast('↩ 标记为未完成');}
@@ -1043,8 +1045,8 @@ function addSubtask(id){const t=tasks.find(x=>x.id===id);if(!t)return;const el=d
 function toggleSubtask(tid,sid){const t=tasks.find(x=>x.id===tid);if(!t)return;const s=t.subtasks.find(x=>x.id===sid);if(!s)return;s.done=!s.done;save();renderAll();}
 
 // Date filter
-function clearDateFilter(){dateFilter='';document.getElementById('dateFilterBanner').classList.remove('show');document.getElementById('taskDate2').value=today();renderAll();}
-function navigateToDate(ds){dateFilter=ds;document.getElementById('dateFilterBanner').classList.add('show');document.getElementById('dateFilterLabel').textContent=fmtDate(ds);document.getElementById('taskDate').value=ds;document.getElementById('taskDate2').value=ds;switchTab('plan');}
+function clearDateFilter(){dateFilter='';document.getElementById('dateFilterBanner').classList.remove('show');renderAll();}
+function navigateToDate(ds){dateFilter=ds;document.getElementById('dateFilterBanner').classList.add('show');document.getElementById('dateFilterLabel').textContent=fmtDate(ds);switchTab('plan');}
 
 // Render
 function renderAll(){
@@ -1250,7 +1252,6 @@ function handleCalClick(ds,el){
   el.classList.add('selected');showCalDetail(ds);
 }
 function showCalDetail(ds){
-  document.getElementById('taskDate').value=ds;document.getElementById('taskDate2').value=ds;
   const dts=tasks.filter(t=>t.date===ds),c=document.getElementById('calDetail');
   if(dts.length===0){c.innerHTML=`<p style="text-align:center;color:var(--ink-s);padding:var(--space);">📭 ${fmtDate(ds)} 暂无任务<br><span style="font-size:12px;">再次点击日期可跳转到全部任务</span></p>`;return;}
   const pe={high:'🔥',mid:'⚡',low:'🌿'},pl={high:'高',mid:'中',low:'低'},cl={work:'工作',life:'生活',study:'学习',other:'其他'};
